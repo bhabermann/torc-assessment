@@ -4,7 +4,6 @@ namespace RealEstateListingApi.Models
 {
     public class Listing
     {
-        [Required]
         [StringLength(36)]
         public string Id { get; set; } = string.Empty;
 
