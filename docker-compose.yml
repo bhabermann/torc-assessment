@@ -4,6 +4,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+    image: realestate-api:latest
     ports:
       - "5236:80"
       - "7289:443"
