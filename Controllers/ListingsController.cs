@@ -30,6 +30,8 @@ namespace RealEstateListingApi.Controllers
         [Tags("Listings Management")]
         public ActionResult<Listing> AddListing([FromBody] Listing listing)
         {
+            listing.Id = Guid.NewGuid().ToString();
+
             _context.Listings.Add(listing);
             _context.SaveChanges();
             return CreatedAtAction(nameof(GetListingById), new { id = listing.Id }, listing);
