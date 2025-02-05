@@ -2,6 +2,9 @@ using Microsoft.EntityFrameworkCore;
 using RealEstateListingApi.Data;
 using Microsoft.OpenApi.Models;
 using System.Reflection;
+using RealEstateListingApi.Interfaces;
+using RealEstateListingApi.Repositories;
+using RealEstateListingApi.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,6 +19,9 @@ builder.Services.AddSwaggerGen(c =>
     var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
     c.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
 });
+builder.Services.AddScoped<IListingRepository, ListingRepository>();
+builder.Services.AddScoped<IListingService, ListingService>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

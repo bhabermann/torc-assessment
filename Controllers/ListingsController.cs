@@ -1,8 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
-using RealEstateListingApi.Data;
+using RealEstateListingApi.Interfaces;
 using RealEstateListingApi.Models;
 using System.Collections.Generic;
-using System.Linq;
+using System.Threading.Tasks;
 
 namespace RealEstateListingApi.Controllers
 {
@@ -10,44 +10,42 @@ namespace RealEstateListingApi.Controllers
     [Route("api/[controller]")]
     public class ListingsController : ControllerBase
     {
-        private readonly ApplicationDbContext _context;
+        private readonly IListingService _listingService;
 
-        public ListingsController(ApplicationDbContext context)
+        public ListingsController(IListingService listingService)
         {
-            _context = context;
+            _listingService = listingService;
         }
 
         // Tag this operation as "Listings Retrieval"
         [HttpGet]
         [Tags("Listings Retrieval")]
-        public ActionResult<IEnumerable<Listing>> GetAllListings()
+        public async Task<ActionResult<IEnumerable<Listing>>> GetAllListings()
         {
-            return _context.Listings.ToList();
+            var listings = await _listingService.GetAllListingsAsync();
+            return Ok(listings);
         }
 
         // Tag this operation as "Listings Management"
         [HttpPost]
         [Tags("Listings Management")]
-        public ActionResult<Listing> AddListing([FromBody] Listing listing)
+        public async Task<ActionResult<Listing>> AddListing([FromBody] Listing listing)
         {
-            listing.Id = Guid.NewGuid().ToString();
-
-            _context.Listings.Add(listing);
-            _context.SaveChanges();
-            return CreatedAtAction(nameof(GetListingById), new { id = listing.Id }, listing);
+            var newListing = await _listingService.CreateListingAsync(listing);
+            return CreatedAtAction(nameof(GetListingById), new { id = newListing.Id }, newListing);
         }
 
         // Tag this operation as "Listings Retrieval"
         [HttpGet("{id}")]
         [Tags("Listings Retrieval")]
-        public ActionResult<Listing> GetListingById(string id)
+        public async Task<ActionResult<Listing>> GetListingById(string id)
         {
-            var listing = _context.Listings.FirstOrDefault(l => l.Id == id);
+            var listing = await _listingService.GetListingByIdAsync(id);
             if (listing == null)
             {
                 return NotFound();
             }
-            return listing;
+            return Ok(listing);
         }
     }
 }
