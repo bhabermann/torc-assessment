@@ -7,5 +7,4 @@ public interface IListingRepository
     Task<IEnumerable<Listing>> GetAllAsync();
     Task<Listing?> GetByIdAsync(string id);
     Task<Listing> AddAsync(Listing listing);
-    Task SaveChangesAsync();
 }

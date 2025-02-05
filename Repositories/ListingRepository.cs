@@ -24,9 +24,4 @@ public class ListingRepository(ApplicationDbContext context) : IListingRepositor
         await _context.Listings.AddAsync(listing);
         return listing;
     }
-
-    public async Task SaveChangesAsync()
-    {
-        await _context.SaveChangesAsync();
-    }
 } 

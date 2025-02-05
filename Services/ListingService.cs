@@ -5,29 +5,28 @@ namespace RealEstateListingApi.Services;
 
 public class ListingService : IListingService
 {
-    private readonly IListingRepository _repository;
+    private readonly IUnitOfWork _unitOfWork;
 
-
-    public ListingService(IListingRepository repository)
+    public ListingService(IUnitOfWork unitOfWork)
     {
-        _repository = repository;
+        _unitOfWork = unitOfWork;
     }
 
     public async Task<IEnumerable<Listing>> GetAllListingsAsync()
     {
-        return await _repository.GetAllAsync();
+        return await _unitOfWork.Listings.GetAllAsync();
     }
 
     public async Task<Listing?> GetListingByIdAsync(string id)
     {
-        return await _repository.GetByIdAsync(id);
+        return await _unitOfWork.Listings.GetByIdAsync(id);
     }
 
     public async Task<Listing> CreateListingAsync(Listing listing)
     {
         listing.Id = Guid.NewGuid().ToString();
-        await _repository.AddAsync(listing);
-        await _repository.SaveChangesAsync();
+        await _unitOfWork.Listings.AddAsync(listing);
+        await _unitOfWork.CompleteAsync();
         return listing;
     }
 } 
