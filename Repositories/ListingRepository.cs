@@ -24,4 +24,14 @@ public class ListingRepository(ApplicationDbContext context) : IListingRepositor
         await _context.Listings.AddAsync(listing);
         return listing;
     }
+
+    public async Task<bool> DeleteAsync(string id)
+    {
+        var listing = await _context.Listings.FirstOrDefaultAsync(l => l.Id == id);
+        if (listing == null)
+            return false;
+
+        _context.Listings.Remove(listing);
+        return true;
+    }
 } 

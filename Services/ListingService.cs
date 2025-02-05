@@ -29,4 +29,15 @@ public class ListingService : IListingService
         await _unitOfWork.CompleteAsync();
         return listing;
     }
+
+    public async Task<bool> DeleteListingAsync(string id)
+    {
+        var deleted = await _unitOfWork.Listings.DeleteAsync(id);
+        if (deleted)
+        {
+            await _unitOfWork.CompleteAsync();
+            return true;
+        }
+        return false;
+    }
 } 

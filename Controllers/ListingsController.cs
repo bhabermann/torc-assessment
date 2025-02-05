@@ -47,5 +47,18 @@ namespace RealEstateListingApi.Controllers
             }
             return Ok(listing);
         }
+
+        // Tag this operation as "Listings Management"
+        [HttpDelete("{id}")]
+        [Tags("Listings Management")]
+        public async Task<IActionResult> DeleteListing(string id)
+        {
+            var result = await _listingService.DeleteListingAsync(id);
+            if (!result)
+            {
+                return NotFound();
+            }
+            return NoContent();
+        }
     }
 }
